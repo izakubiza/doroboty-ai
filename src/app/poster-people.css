@@ -241,6 +241,356 @@ footer {
   background: var(--gui-match-green);
 }
 
+/* Own-work fact: brand-pink pill with ink contour. */
+.own-work-label {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  max-width: 100%;
+  padding: 4px 14px;
+  border: 1px solid var(--gui-edge);
+  border-radius: 18px;
+  background: var(--gui-accent);
+  color: var(--gui-accent-text);
+  font-family: var(--font-body);
+  font-size: 14px;
+  font-weight: 700;
+  line-height: 1.5;
+}
+.own-work-label svg {
+  flex: none;
+}
+/* Recruiting progress on employer cards: sentence plus six decorative segments. */
+.stage-progress {
+  width: min(100%, 460px);
+  margin-top: 20px;
+}
+/* Employer card: main column (time strip, identity, stage) beside a fixed score area; summary below. */
+.application-card-top {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  align-items: start;
+  gap: 16px 24px;
+}
+.application-card .submitted-freshness {
+  margin: 0 0 18px;
+}
+.application-card .work-summary-card {
+  margin-top: 22px;
+}
+/* "Co kandydat zrobił sam": the own-contribution row carries a light green fill, without contours. */
+.application-card-actions {
+  display: flex;
+  justify-content: flex-end;
+  margin-top: 20px;
+}
+.work-summary-heading {
+  font-family: var(--gui-font-editorial);
+  font-size: 20px;
+  font-weight: 400;
+  line-height: 1.3;
+}
+.work-summary-card .work-summary {
+  margin-top: 0;
+}
+.work-summary-heading + .work-summary {
+  margin-top: 12px;
+}
+.work-summary > .work-summary-own[data-own-work="true"] {
+  padding: 10px 12px;
+  border-radius: 12px;
+  background: var(--gui-success-transparent);
+  font-size: 15px;
+}
+.work-summary > .work-summary-own[data-own-work="false"] {
+  padding: 0 12px;
+}
+.work-summary > div:not(.work-summary-own) {
+  padding: 0 12px;
+  color: var(--gui-text-muted-accessible);
+}
+.work-summary > div:not(.work-summary-own) dt {
+  color: var(--gui-text);
+}
+.stage-progress-label {
+  font-size: 14px;
+  font-weight: 600;
+  line-height: 1.6;
+}
+.stage-progress-steps {
+  display: grid;
+  grid-template-columns: repeat(6, minmax(0, 1fr));
+  gap: 4px;
+  margin-top: 6px;
+}
+.stage-progress-segment {
+  display: block;
+  height: 8px;
+  border: 1px solid transparent;
+  border-radius: 4px;
+  background: var(--gui-neutral-3);
+}
+.stage-progress-name {
+  display: block;
+  margin-top: 4px;
+  overflow: hidden;
+  color: var(--gui-text-muted);
+  font-size: 11px;
+  line-height: 1.3;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.stage-progress-steps [data-state="done"] .stage-progress-segment {
+  background: var(--gui-edge);
+}
+.stage-progress-steps [data-state="current"] .stage-progress-segment {
+  border-color: var(--gui-edge);
+  background: var(--gui-accent);
+}
+.stage-progress-steps [data-state="current"] .stage-progress-name {
+  color: var(--gui-text);
+  font-weight: 700;
+}
+.stage-progress[data-outcome="rejected"] [data-state="current"] .stage-progress-segment,
+.stage-progress[data-outcome="withdrawn"] [data-state="current"] .stage-progress-segment {
+  border-color: var(--gui-error);
+  background: var(--gui-error-transparent);
+}
+.stage-progress[data-outcome="hired"] [data-state="current"] .stage-progress-segment {
+  border-color: var(--gui-success);
+  background: var(--gui-success);
+}
+@media (max-width: 600px) {
+  .stage-progress-name {
+    display: none;
+  }
+}
+
+/* Submission date with freshness pill: green up to 3 days, neutral 4–7, red from 8 days. */
+.submitted-freshness {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 8px 12px;
+  margin-top: 8px;
+  color: var(--gui-text-muted);
+  font-size: 14px;
+  line-height: 1.6;
+}
+.freshness-label {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 2px 12px;
+  border: 1px solid transparent;
+  border-radius: 18px;
+  background: var(--gui-neutral-3);
+  color: var(--gui-text);
+  font-size: 13px;
+  font-weight: 600;
+  line-height: 1.6;
+  white-space: nowrap;
+}
+.freshness-label[data-freshness="fresh"] {
+  background: var(--gui-success-transparent);
+  border-color: var(--gui-success);
+}
+/* Long wait is a warning, not an error: yellow fill with ink contour. */
+.freshness-label[data-freshness="stale"] {
+  background: var(--gui-warning-transparent);
+  border-color: var(--gui-edge);
+}
+
+/* Candidate availability: white outlined pill with icon, colored contour per state. */
+.availability-label {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 1px 12px;
+  border: 1.5px solid var(--gui-success);
+  border-radius: 18px;
+  background: #fff;
+  color: var(--gui-text);
+  font-size: 13px;
+  font-weight: 600;
+  line-height: 1.6;
+  white-space: nowrap;
+}
+.availability-label svg {
+  flex: none;
+}
+.availability-label[data-availability="current"] svg {
+  color: var(--gui-success);
+}
+.availability-label[data-availability="ended"] {
+  border-color: var(--gui-neutral-5);
+  color: var(--gui-text-muted);
+}
+
+/* Employer card grid: score area fixed top-right, own-work label below it (full width on phones). */
+.application-card-top {
+  grid-template-areas:
+    "main score"
+    "main label";
+  grid-template-rows: auto 1fr;
+}
+.application-card-main {
+  grid-area: main;
+  min-width: 0;
+}
+.application-card-top > .score-panel {
+  grid-area: score;
+}
+.application-card-label {
+  grid-area: label;
+  justify-self: end;
+}
+.score-panel {
+  display: flex;
+  justify-content: center;
+  min-width: 132px;
+}
+.score-panel .match-ring svg {
+  width: 88px;
+  height: 88px;
+}
+.score-panel .match-ring-caption {
+  color: var(--gui-text);
+  font-size: 13px;
+  font-weight: 600;
+}
+/* List-card score gauge: same band tokens as the pill, ink number keeps the value readable. */
+.match-ring {
+  display: inline-flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 2px;
+}
+.match-ring svg {
+  width: 64px;
+  height: 64px;
+}
+.match-ring-track,
+.match-ring-value {
+  fill: none;
+  stroke-width: 7;
+}
+.match-ring-track {
+  stroke: var(--gui-neutral-3);
+}
+.match-ring-value {
+  stroke-linecap: round;
+}
+.match-ring[data-score-band="red"] .match-ring-value {
+  stroke: var(--gui-match-red);
+}
+.match-ring[data-score-band="orange"] .match-ring-value {
+  stroke: var(--gui-match-orange);
+}
+.match-ring[data-score-band="yellow"] .match-ring-value {
+  stroke: var(--gui-match-yellow);
+}
+.match-ring[data-score-band="green"] .match-ring-value {
+  stroke: var(--gui-match-green);
+}
+.match-ring text {
+  fill: var(--gui-text);
+  font-family: var(--font-body);
+  font-size: 15px;
+  font-weight: 700;
+}
+.match-ring-caption {
+  color: var(--gui-text-muted);
+  font-family: var(--font-body);
+  font-size: 12px;
+  line-height: 1.4;
+}
+/* Employer list toolbar: own-work filter on the left, sort field and direction on the right. */
+.candidate-toolbar {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px 24px;
+  margin-top: 16px;
+}
+.candidate-filters {
+  display: grid;
+  gap: 8px;
+}
+.own-work-filter {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  font-size: 14px;
+  line-height: 1.6;
+}
+.candidate-sort {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 8px;
+}
+.candidate-sort-label {
+  font-size: 14px;
+  font-weight: 600;
+}
+.candidate-sort-select {
+  width: 190px;
+}
+.candidate-sort-dir svg {
+  width: 18px;
+  height: 18px;
+}
+.own-work-filter-count {
+  color: var(--gui-text-muted);
+}
+.work-summary {
+  display: grid;
+  gap: 8px;
+  margin-top: 16px;
+  font-size: 14px;
+  line-height: 1.6;
+}
+.work-summary > div {
+  display: grid;
+  grid-template-columns: 120px minmax(0, 1fr);
+  gap: 12px;
+}
+.work-summary dt {
+  font-weight: 600;
+}
+@media (max-width: 600px) {
+  .application-card-top {
+    gap: 12px;
+    grid-template-areas:
+      "main score"
+      "label label";
+    grid-template-rows: auto auto;
+  }
+  .application-card-label {
+    justify-self: start;
+  }
+  .application-card .freshness-label {
+    max-width: 100%;
+    white-space: normal;
+  }
+  .score-panel {
+    min-width: 0;
+  }
+  .score-panel .match-ring svg {
+    width: 64px;
+    height: 64px;
+  }
+  .own-work-label {
+    white-space: nowrap;
+  }
+  .work-summary > div {
+    grid-template-columns: minmax(0, 1fr);
+    gap: 0;
+  }
+}
+
 /* C13 context returns share one anatomy across public and workspace screens. */
 .back-link {
   display: inline-flex;

@@ -32,7 +32,9 @@ C13 host treatment: Arial/system sans 13px, 12px at <=700px; ink; 17px decorativ
 
 ## Score facts and ordinary facts
 
-MatchScore uses the source fact-pill anatomy with dedicated **host** colors: 0–39 red, 40–59 orange, 60–79 yellow, 80–100 vivid green. The exact tokens and contrast evidence are in [RECORDS.md](RECORDS.md#matchscore) and the score task (`docs/tasks/match-score-colors.md`). Salary facts remain light pink. Score colors do not redefine error/success controls or assess arbitrary CVs. Always keep the numerical percentage readable.
+MatchScore uses the source fact-pill anatomy with dedicated **host** colors: 0–39 red, 40–59 orange, 60–79 yellow, 80–100 vivid green. The exact tokens and contrast evidence are in [RECORDS.md](RECORDS.md#matchscore) and the score task (`docs/tasks/match-score-colors.md`). Salary facts remain light pink. Score colors do not redefine error/success controls or assess arbitrary CVs. Always keep the numerical percentage readable. `variant="ring"` renders the same bands as a 64px gauge (neutral track, band-colored arc, ink percentage, "Match Score" caption, `role="img"` with the full value) and is used on the application list cards so the score does not compete with label pills; inline metadata keeps the pill.
+
+The employer list's "Dodany opis własnej pracy" label (`OwnWorkLabel` in [work-summary.tsx](../../src/features/prototype/work-summary.tsx)) is a noninteractive brand-pink pill with ink contour and star, placed below the employer card's separate score panel; it is not a score band and receives no action hover.
 
 ## Pointer, hover and focus
 

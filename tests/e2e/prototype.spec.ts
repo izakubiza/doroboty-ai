@@ -144,14 +144,18 @@ test("published job → saved offer/draft → submitted application → employer
   await page
     .getByLabel("Notatka rekrutacyjna (widoczna pracodawcy)")
     .fill("Notatka pracodawcy — tylko panel firmy.");
-  await page.getByRole("button", { name: "W przeglądzie", exact: true }).click();
-  for (const label of ["Zaproszenie na rozmowę", "Pierwsza rozmowa odbyta", "Kolejny etap"])
+  await page.getByRole("button", { name: "Oznacz jako przejrzane", exact: true }).click();
+  for (const label of [
+    "Wyślij zaproszenie na rozmowę",
+    "Potwierdź odbytą rozmowę",
+    "Zaproś do kolejnego etapu",
+  ])
     await page.getByRole("button", { name: label, exact: true }).click();
   await page.reload();
-  await expect(page.getByRole("button", { name: "Zatrudnienie", exact: true })).toBeVisible();
+  await expect(page.getByRole("button", { name: "Zatrudnij", exact: true })).toBeVisible();
   await choose(page, "Anna Kowalska");
   await page.goto(candidateUrl);
-  await expect(page.locator(".record-stage")).toHaveText("Kolejny etap");
+  await expect(page.locator(".record-stage")).toHaveText("Kontynuacja");
   await expect(
     page.getByText("Notatka pracodawcy — tylko panel firmy.", { exact: true }),
   ).toHaveCount(0);
@@ -176,7 +180,7 @@ test("candidate withdrawal is confirmed and terminal", async ({ page }) => {
   await page.getByRole("button", { name: "Wycofaj aplikację", exact: true }).click();
   await page.getByRole("button", { name: "Potwierdź wycofanie", exact: true }).click();
   await page.reload();
-  await expect(page.locator(".record-stage")).toHaveText("Wycofana");
+  await expect(page.locator(".record-stage")).toHaveText("Wycofane");
 });
 test("profile changes do not rewrite a submitted application snapshot", async ({ page }) => {
   await application(page);
@@ -725,14 +729,14 @@ test("process sheet keeps notes across keyboard tabs and saves stage history wit
   await expect(note).toHaveValue(text);
   await expect(preview).toHaveCount(0);
   await expect(page.getByRole("link", { name: "Pobierz CV (PDF)", exact: true })).toHaveCount(0);
-  await page.getByRole("button", { name: "W przeglądzie", exact: true }).click();
+  await page.getByRole("button", { name: "Oznacz jako przejrzane", exact: true }).click();
   await expect(page.locator(".record-stage")).toBeFocused();
   await expect(note).toHaveValue("");
   await expect(page.locator(".process-timeline")).toContainText(text);
   await page.reload();
   await expect(page.locator(".process-timeline")).toContainText(text);
   await note.fill("Zakończenie przykładowego procesu.");
-  await page.getByRole("button", { name: "Proces zakończony", exact: true }).click();
+  await page.getByRole("button", { name: "Odrzuć kandydata", exact: true }).click();
   await expect(page.locator(".record-stage")).toBeFocused();
   await expect(note).toHaveCount(0);
   await expect(page.locator(".record-actions")).toHaveCount(0);
@@ -947,14 +951,14 @@ test("candidate record shares snapshot tabs while excluding employer notes and m
   await expect(trigger).toBeFocused();
   await trigger.click();
   await confirm.click();
-  await expect(page.locator(".record-stage")).toHaveText("Wycofana");
+  await expect(page.locator(".record-stage")).toHaveText("Wycofane");
   await expect(page.locator(".record-stage")).toBeFocused();
   await expect(trigger).toHaveCount(0);
   await expect(page.getByRole("status")).toHaveText("Aplikacja została wycofana.");
   const accessibility = await new AxeBuilder({ page }).include(".recruiting-record").analyze();
   expect(accessibility.violations).toEqual([]);
   await page.reload();
-  await expect(page.locator(".record-stage")).toHaveText("Wycofana");
+  await expect(page.locator(".record-stage")).toHaveText("Wycofane");
   await expect(trigger).toHaveCount(0);
   await choose(page, "Anna Kowalska");
   await page.goto("/#/app/aplikacje/application-example");

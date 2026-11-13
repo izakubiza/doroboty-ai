@@ -33,7 +33,27 @@ describe("coherent browser scenario", () => {
     };
     expect(() => transition(s, input, time)).toThrow("Zatwierdź");
     expect(() => transition(submitted(), { ...input, consent: true }, time)).toThrow("już wysłana");
-    expect(s.applications).toHaveLength(1);
+    expect(s.applications).toHaveLength(9);
+  });
+  it("seeds one BrightLabs job with own-work and supporting-role applicants of similar score", () => {
+    const s = initialState();
+    const job = s.jobs[0];
+    expect(s.applications.every((a) => a.jobId === job.id && a.work)).toBe(true);
+    expect(s.applications.filter((a) => a.work?.ownWork)).toHaveLength(5);
+    expect(s.applications.filter((a) => a.work && !a.work.ownWork)).toHaveLength(4);
+    for (const a of s.applications) expect(a.score).toBeGreaterThanOrEqual(70);
+    for (const a of s.applications) expect(a.score).toBeLessThan(80);
+    const unlisted = s.people.filter((p) => p.listed === false);
+    expect(unlisted).toHaveLength(8);
+    expect(unlisted.every((p) => p.role === "candidate")).toBe(true);
+  });
+  it("snapshots the prepared work summary on submit and still parses records without one", () => {
+    const app = submitted().applications.at(-1)!;
+    expect(app.work?.ownWork).toBe(true);
+    expect(app.work?.questions.length).toBeGreaterThan(0);
+    const legacy = initialState();
+    for (const a of legacy.applications) delete a.work;
+    expect(stateSchema.safeParse(legacy).success).toBe(true);
   });
   it("preserves approved sources while profile and notes evolve", () => {
     const s = submitted();

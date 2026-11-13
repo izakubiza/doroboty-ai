@@ -4,7 +4,8 @@ import { ProcessTimeline } from "@/components/process-timeline";
 import { RecordSheet } from "@/components/record-sheet";
 import { CvAttachment } from "./cv-attachment";
 import { MatchScore } from "./match-score";
-import { stageLabels, type Application, type Stage } from "./model";
+import { OwnWorkLabel } from "./work-summary";
+import { candidateStageLabels, stageLabels, type Application, type Stage } from "./model";
 
 type RecordEvent = { stage: Stage; at: string; note?: string };
 const dateFormat = new Intl.DateTimeFormat("pl-PL", {
@@ -24,7 +25,15 @@ export function ApplicationRecord({
 }: {
   application: Pick<
     Application,
-    "candidateId" | "candidateName" | "jobTitle" | "stage" | "answer" | "cv" | "score" | "summary"
+    | "candidateId"
+    | "candidateName"
+    | "jobTitle"
+    | "stage"
+    | "answer"
+    | "cv"
+    | "score"
+    | "summary"
+    | "work"
   >;
   companyName: string;
   audience: "candidate" | "employer";
@@ -34,6 +43,7 @@ export function ApplicationRecord({
   footer?: ReactNode;
 }) {
   const candidate = audience === "candidate";
+  const labels = candidate ? candidateStageLabels : stageLabels;
   const title = candidate ? application.jobTitle : application.candidateName;
   const context = candidate ? application.candidateName : application.jobTitle;
   const submitted = history[0];
@@ -53,9 +63,10 @@ export function ApplicationRecord({
             {context} · {companyName}
           </span>
           <span className="record-stage" tabIndex={-1} ref={statusRef}>
-            {stageLabels[application.stage]}
+            {labels[application.stage]}
           </span>
           <MatchScore score={application.score} />
+          {!candidate && application.work?.ownWork && <OwnWorkLabel />}
           {submitted && (
             <span>
               Złożona:{" "}
@@ -104,7 +115,7 @@ export function ApplicationRecord({
             <ProcessTimeline
               items={history.map((event, index) => ({
                 id: `${index}-${event.at}`,
-                title: stageLabels[event.stage],
+                title: labels[event.stage],
                 dateTime: event.at,
                 content: event.note || undefined,
               }))}

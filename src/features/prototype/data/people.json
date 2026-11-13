@@ -8,7 +8,17 @@
     "location": "Warszawa",
     "cv": "Anna Kowalska — Product Manager\n2022–2026: prowadzenie rozwoju narzędzi dla zespołów operacyjnych. Badania z 18 użytkownikami, priorytetyzacja i wdrożenie asystenta do zgłoszeń. Skrócenie czasu obsługi o 30%.\n2019–2022: Product Analyst. Analiza lejków i eksperymenty A/B.\nUmiejętności: discovery, analityka produktu, współpraca z inżynierami, prototypowanie AI.",
     "exampleScore": 84,
-    "exampleSummary": "Doświadczenie w badaniach użytkowników i wdrażaniu automatyzacji. Warto porozmawiać o sposobie mierzenia efektów i współpracy z zespołem."
+    "exampleSummary": "Doświadczenie w badaniach użytkowników i wdrażaniu automatyzacji. Warto porozmawiać o sposobie mierzenia efektów i współpracy z zespołem.",
+    "exampleWork": {
+      "ownWork": true,
+      "own": "Sama przeprowadziła badania z 18 użytkownikami i ustaliła priorytety asystenta do zgłoszeń.",
+      "team": "Zespół inżynierów zbudował i wdrożył asystenta.",
+      "project": "Narzędzie dla zespołów operacyjnych (2022–2026); czas obsługi zgłoszeń krótszy o 30%.",
+      "questions": [
+        "Które wnioski z 18 rozmów zmieniły zakres asystenta?",
+        "Jak zmierzyła Pani skrócenie czasu obsługi o 30%?"
+      ]
+    }
   },
   {
     "id": "candidate-marek",
@@ -19,7 +29,194 @@
     "location": "Kraków",
     "cv": "Marek Nowak — Product Owner\n2021–2026: rozwój platformy B2B. Automatyzacja obsługi zgłoszeń i skrócenie czasu odpowiedzi o 25%. Prowadzenie warsztatów z użytkownikami, praca z backlogiem i zespołem wdrożeniowym.",
     "exampleScore": 72,
-    "exampleSummary": "Doświadczenie w produktach B2B i automatyzacji obsługi. Podczas rozmowy warto doprecyzować zakres samodzielnych decyzji."
+    "exampleSummary": "Doświadczenie w produktach B2B i automatyzacji obsługi. Podczas rozmowy warto doprecyzować zakres samodzielnych decyzji.",
+    "exampleWork": {
+      "ownWork": true,
+      "own": "Sam poprowadził badania z użytkownikami i wdrożenie automatyzacji obsługi zgłoszeń.",
+      "team": "Zespół wdrożeniowy przygotował automatyzację; backlog prowadził razem z zespołem.",
+      "project": "Platforma B2B do obsługi klientów (2021–2026); czas odpowiedzi krótszy o 25%.",
+      "questions": [
+        "Które decyzje w tym wdrożeniu podjął Pan sam, a które zespół?",
+        "Skąd wiadomo, że skrócenie czasu odpowiedzi o 25% wynika z automatyzacji?"
+      ]
+    }
+  },
+  {
+    "id": "candidate-zofia",
+    "role": "candidate",
+    "listed": false,
+    "name": "Zofia Lewandowska",
+    "headline": "Product Manager · fintech",
+    "bio": "Automatyzuję procesy kredytowe.",
+    "location": "Warszawa",
+    "cv": "Zofia Lewandowska — Product Manager\n2023–2026: bank detaliczny, asystent wstępnej oceny wniosków kredytowych. 12 wywiadów z analitykami, pilot na dwóch typach wniosków.\n2020–2023: Business Analyst w zespole kredytowym.\nUmiejętności: discovery, kryteria odbioru, praca z danymi.",
+    "exampleScore": 74,
+    "exampleSummary": "Doświadczenie z automatyzacją procesów finansowych. Warto porozmawiać o wynikach pilota.",
+    "exampleWork": {
+      "ownWork": true,
+      "own": "Sama przeprowadziła 12 wywiadów z analitykami i ograniczyła pierwszą wersję do dwóch typów wniosków.",
+      "team": "Inżynierowie zbudowali integrację z systemem bankowym.",
+      "project": "Asystent wstępnej oceny wniosków kredytowych w banku detalicznym (2023–2026).",
+      "questions": [
+        "Dlaczego pilot objął tylko dwa typy wniosków?",
+        "Jakie kryteria odbioru pilota Pani ustaliła i czy zostały spełnione?"
+      ]
+    }
+  },
+  {
+    "id": "candidate-pawel",
+    "role": "candidate",
+    "listed": false,
+    "name": "Paweł Dąbrowski",
+    "headline": "Product Owner · logistyka",
+    "bio": "Rozwijam narzędzia do planowania dostaw.",
+    "location": "Wrocław",
+    "cv": "Paweł Dąbrowski — Product Owner\n2022–2026: firma logistyczna, narzędzie do planowania dostaw. Eksperyment na 40 trasach, wdrożenie w pierwszym oddziale.\n2018–2022: Analityk operacyjny.\nUmiejętności: eksperymenty, analiza danych, współpraca z data science.",
+    "exampleScore": 76,
+    "exampleSummary": "Doświadczenie w automatyzacji procesów operacyjnych. Warto porozmawiać o skalowaniu wdrożenia.",
+    "exampleWork": {
+      "ownWork": true,
+      "own": "Sam zaprojektował i przeprowadził eksperyment na 40 trasach, a potem zdecydował o wdrożeniu w jednym oddziale.",
+      "team": "Zespół data science przygotował model planowania tras.",
+      "project": "Planowanie dostaw w firmie logistycznej (2022–2026).",
+      "questions": [
+        "Jak dobrał Pan 40 tras do eksperymentu?",
+        "Co przesądziło o starcie w jednym oddziale?",
+        "Co zrobiłby Pan dziś inaczej w tym eksperymencie?"
+      ]
+    }
+  },
+  {
+    "id": "candidate-kinga",
+    "role": "candidate",
+    "listed": false,
+    "name": "Kinga Szymańska",
+    "headline": "Product Manager · SaaS dla księgowości",
+    "bio": "Automatyzuję pracę biur rachunkowych.",
+    "location": "Gdańsk",
+    "cv": "Kinga Szymańska — Product Manager\n2021–2026: SaaS dla biur rachunkowych, automatyczne rozpoznawanie faktur. Analiza 300 ręcznych poprawek, wybór trzech pól na start.\n2018–2021: Konsultantka wdrożeniowa.\nUmiejętności: analiza jakościowa, priorytetyzacja, produkty B2B.",
+    "exampleScore": 71,
+    "exampleSummary": "Doświadczenie w produktach B2B dla finansów. Warto porozmawiać o mierzeniu efektów automatyzacji.",
+    "exampleWork": {
+      "ownWork": true,
+      "own": "Sama przeanalizowała 300 ręcznych poprawek i wybrała trzy pola, od których zaczęła automatyzacja.",
+      "team": "Projektantka przygotowała ekran weryfikacji, a programiści integrację z OCR.",
+      "project": "Rozpoznawanie faktur w SaaS dla biur rachunkowych (2021–2026).",
+      "questions": [
+        "Jak wyglądała analiza 300 poprawek i co z niej wynikło?",
+        "Jak sprawdziła Pani, czy księgowe poprawiają mniej pól?"
+      ]
+    }
+  },
+  {
+    "id": "candidate-michal",
+    "role": "candidate",
+    "listed": false,
+    "name": "Michał Wójcik",
+    "headline": "Product Manager · e-commerce",
+    "bio": "Rozwijam narzędzia dla obsługi klienta.",
+    "location": "Poznań",
+    "cv": "Michał Wójcik — Product Manager\n2023–2026: sklep internetowy, asystent dla działu obsługi klienta. Zasady przekazywania rozmów, cotygodniowy przegląd 50 rozmów.\n2019–2023: Specjalista ds. obsługi klienta, potem analityk.\nUmiejętności: praca z modelami językowymi, jakość odpowiedzi, procesy obsługi.",
+    "exampleScore": 73,
+    "exampleSummary": "Doświadczenie z asystentami AI w obsłudze klienta. Warto porozmawiać o jakości odpowiedzi.",
+    "exampleWork": {
+      "ownWork": true,
+      "own": "Sam napisał zasady przekazywania rozmów do konsultantów i co tydzień przeglądał 50 rozmów.",
+      "team": "Zespół zbudował integrację z systemem zgłoszeń; model dostarczył zewnętrzny dostawca.",
+      "project": "Asystent obsługi klienta w sklepie internetowym (2023–2026).",
+      "questions": [
+        "Co zmienił Pan w zasadach po przeglądach rozmów?",
+        "Jak decydował Pan, kiedy rozmowa trafia do konsultanta?"
+      ]
+    }
+  },
+  {
+    "id": "candidate-natalia",
+    "role": "candidate",
+    "listed": false,
+    "name": "Natalia Kamińska",
+    "headline": "Product Manager · ubezpieczenia",
+    "bio": "Pracuję przy wdrożeniach AI w ubezpieczeniach.",
+    "location": "Warszawa",
+    "cv": "Natalia Kamińska — Product Manager\n2024–2026: firma ubezpieczeniowa, projekt asystenta do likwidacji szkód. Dokumentacja projektu, spotkania z działem szkód.\n2021–2024: Koordynatorka projektów.\nUmiejętności: organizacja pracy zespołu, dokumentacja, komunikacja.",
+    "exampleScore": 75,
+    "exampleSummary": "Doświadczenie przy wdrożeniu AI w ubezpieczeniach. Warto porozmawiać o efektach projektu.",
+    "exampleWork": {
+      "ownWork": false,
+      "own": "Nie opisuje własnych decyzji; pisze o wsparciu zespołu w dokumentacji i organizacji spotkań.",
+      "team": "Zespół zaprojektował i wdrożył asystenta do likwidacji szkód.",
+      "project": "Asystent likwidacji szkód w firmie ubezpieczeniowej (2024–2026).",
+      "questions": [
+        "Którą decyzję w tym projekcie podjęła Pani sama?",
+        "Co konkretnie zawierała dokumentacja, którą Pani przygotowała?"
+      ]
+    }
+  },
+  {
+    "id": "candidate-jakub",
+    "role": "candidate",
+    "listed": false,
+    "name": "Jakub Kaczmarek",
+    "headline": "Product Analyst · HR tech",
+    "bio": "Wspieram zespoły produktowe danymi.",
+    "location": "Kraków",
+    "cv": "Jakub Kaczmarek — Product Analyst\n2023–2025: firma HR tech, chatbot dla działu HR. Warsztaty z użytkownikami, raporty dla kierownictwa.\n2021–2023: Junior Analyst.\nUmiejętności: raportowanie, warsztaty, analiza ankiet.",
+    "exampleScore": 77,
+    "exampleSummary": "Doświadczenie przy chatbocie HR i raportowaniu. Warto porozmawiać o wynikach wdrożenia.",
+    "exampleWork": {
+      "ownWork": false,
+      "own": "Nie opisuje własnej części pracy; pisze o udziale w warsztatach i pomocy przy raportach.",
+      "team": "Zespół produktowy zbudował chatbota HR i prowadził warsztaty.",
+      "project": "Chatbot dla działu HR w firmie HR tech (2023–2025).",
+      "questions": [
+        "Za jaki fragment chatbota odpowiadał Pan sam?",
+        "Jakie dane zawierały raporty i kto na ich podstawie decydował?"
+      ]
+    }
+  },
+  {
+    "id": "candidate-oliwia",
+    "role": "candidate",
+    "listed": false,
+    "name": "Oliwia Mazur",
+    "headline": "Junior Product Manager · fintech",
+    "bio": "Zbieram opinie użytkowników aplikacji finansowej.",
+    "location": "Łódź",
+    "cv": "Oliwia Mazur — Junior Product Manager\n2024–2026: startup fintech, automatyczna kategoryzacja wydatków. Zbieranie opinii użytkowników, wsparcie Head of Product.\n2022–2024: Customer Success.\nUmiejętności: kontakt z użytkownikami, ankiety, koordynacja.",
+    "exampleScore": 72,
+    "exampleSummary": "Doświadczenie w aplikacji fintech i pracy z użytkownikami. Warto porozmawiać o wynikach funkcji.",
+    "exampleWork": {
+      "ownWork": false,
+      "own": "Nie opisuje własnych decyzji; pisze o zbieraniu opinii i przekazywaniu ich zespołowi.",
+      "team": "Head of Product i zespół wdrożyli kategoryzację wydatków.",
+      "project": "Automatyczna kategoryzacja wydatków w aplikacji fintech (2024–2026).",
+      "questions": [
+        "Jak zbierała Pani opinie i co się z nimi działo dalej?",
+        "Co w tym projekcie zmieniło się dzięki Pani pracy?"
+      ]
+    }
+  },
+  {
+    "id": "candidate-bartosz",
+    "role": "candidate",
+    "listed": false,
+    "name": "Bartosz Krawczyk",
+    "headline": "Product Owner · energetyka",
+    "bio": "Pracuję przy automatyzacji obsługi klientów energetyki.",
+    "location": "Katowice",
+    "cv": "Bartosz Krawczyk — Product Owner\n2022–2025: spółka energetyczna, automatyzacja obsługi reklamacji. Współpraca z dostawcą i zespołem IT.\n2018–2022: Specjalista ds. reklamacji.\nUmiejętności: współpraca z dostawcami, harmonogramy, procesy obsługi.",
+    "exampleScore": 70,
+    "exampleSummary": "Doświadczenie przy automatyzacji obsługi reklamacji. Warto porozmawiać o efektach wdrożenia.",
+    "exampleWork": {
+      "ownWork": false,
+      "own": "Nie opisuje własnej części pracy; pisze o współpracy z dostawcą i zespołem IT.",
+      "team": "Dostawca i zespół IT wdrożyli automatyzację reklamacji.",
+      "project": "Automatyzacja obsługi reklamacji w spółce energetycznej (2022–2025).",
+      "questions": [
+        "Jaką rolę miał Pan we współpracy z dostawcą?",
+        "Po czym poznaliście, że wdrożenie się udało?"
+      ]
+    }
   },
   {
     "id": "employer-brightlabs",

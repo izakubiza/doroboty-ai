@@ -1,6 +1,7 @@
 import { z } from "zod";
 import marketplace from "./data/marketplace.json" with { type: "json" };
 import people from "./data/people.json" with { type: "json" };
+import applicantPool from "./data/applicant-pool.json" with { type: "json" };
 import type { JobWithCompany } from "@/features/jobs/types";
 
 const id = z
@@ -65,6 +66,18 @@ export const profileSchema = z.object({
   bio: text,
   location: shortText,
 });
+/**
+ * Prepared scenario summary of the candidate's own contribution. It is fixed scenario content,
+ * snapshotted on submit like the score; no model produces or assesses it.
+ */
+export const workSummarySchema = z.object({
+  ownWork: z.boolean(),
+  own: shortText,
+  team: shortText,
+  project: shortText,
+  questions: z.array(shortText).min(1).max(3),
+});
+export type WorkSummary = z.infer<typeof workSummarySchema>;
 const personSchema = profileSchema.extend({
   id,
   role: z.enum(["candidate", "employer", "operator"]),
@@ -72,6 +85,9 @@ const personSchema = profileSchema.extend({
   cv: text,
   exampleScore: z.number().int().min(0).max(100),
   exampleSummary: text,
+  exampleWork: workSummarySchema.optional(),
+  /** Seeded applicants exist for the employer scenario but are not offered in the picker. */
+  listed: z.boolean().optional(),
 });
 export const stages = [
   "submitted",
@@ -84,15 +100,34 @@ export const stages = [
   "hired",
 ] as const;
 export type Stage = (typeof stages)[number];
+/** Employer wording: names what happened, mirroring the case funnel columns. */
 export const stageLabels: Record<Stage, string> = {
-  submitted: "Aplikacja wysłana",
-  reviewed: "W przeglądzie",
-  interview_invited: "Zaproszenie na rozmowę",
-  first_conversation_held: "Pierwsza rozmowa odbyta",
-  continued: "Kolejny etap",
-  rejected: "Proces zakończony",
-  withdrawn: "Wycofana",
+  submitted: "Nowe zgłoszenie",
+  reviewed: "Przejrzane",
+  interview_invited: "Zaproszenie wysłane",
+  first_conversation_held: "Rozmowa odbyta",
+  continued: "Kontynuacja",
+  rejected: "Odrzucone",
+  withdrawn: "Wycofane przez kandydata",
   hired: "Zatrudnienie",
+};
+/** Candidate wording keeps their own perspective and a gentler ending after rejection. */
+export const candidateStageLabels: Record<Stage, string> = {
+  ...stageLabels,
+  submitted: "Aplikacja wysłana",
+  rejected: "Proces zakończony",
+  withdrawn: "Wycofane",
+};
+/** Recruiter action button text: the verb that moves the application into the stage. */
+export const stageActionLabels: Record<Stage, string> = {
+  submitted: "Przywróć jako nowe",
+  reviewed: "Oznacz jako przejrzane",
+  interview_invited: "Wyślij zaproszenie na rozmowę",
+  first_conversation_held: "Potwierdź odbytą rozmowę",
+  continued: "Zaproś do kolejnego etapu",
+  rejected: "Odrzuć kandydata",
+  withdrawn: "Oznacz jako wycofane",
+  hired: "Zatrudnij",
 };
 export const nextStages: Record<Stage, Stage[]> = {
   submitted: ["reviewed", "rejected"],
@@ -117,6 +152,7 @@ const applicationSchema = z.object({
   generatedAnswer: text,
   score: z.number().int().min(0).max(100),
   summary: text,
+  work: workSummarySchema.optional(),
   stage: z.enum(stages),
   events: z
     .array(z.object({ stage: z.enum(stages), at: z.iso.datetime(), note: text }))
@@ -241,9 +277,34 @@ export function initialState(): State {
     generatedAnswer: "",
     score: bob.exampleScore,
     summary: bob.exampleSummary,
+    work: bob.exampleWork,
     stage: "submitted",
     events: [{ stage: "submitted", at: "2026-11-02T09:00:00.000Z", note: "" }],
   });
+  for (const seed of applicantPool) {
+    const applicant = state.people.find((x) => x.id === seed.candidateId)!;
+    const withdrawnAt = "withdrawnAt" in seed ? seed.withdrawnAt : undefined;
+    state.applications.push({
+      id: seed.id,
+      candidateId: applicant.id,
+      jobId: job.id,
+      companyId: job.companyId,
+      jobTitle: job.title,
+      candidateName: applicant.name,
+      cv: applicant.cv,
+      answer: seed.answer,
+      sourceNotes: "",
+      generatedAnswer: "",
+      score: applicant.exampleScore,
+      summary: applicant.exampleSummary,
+      work: applicant.exampleWork,
+      stage: withdrawnAt ? "withdrawn" : "submitted",
+      events: [
+        { stage: "submitted", at: seed.submittedAt, note: "" },
+        ...(withdrawnAt ? [{ stage: "withdrawn" as const, at: withdrawnAt, note: "" }] : []),
+      ],
+    });
+  }
   return stateSchema.parse(state);
 }
 export function publishedJobs(state: State): JobWithCompany[] {
@@ -312,6 +373,7 @@ export function transition(
         generatedAnswer: action.generated,
         score: p.exampleScore,
         summary: p.exampleSummary,
+        work: p.exampleWork,
         stage: "submitted",
         events: [{ stage: "submitted", at: now, note: "" }],
       }),

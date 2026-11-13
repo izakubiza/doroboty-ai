@@ -1,6 +1,21 @@
 import { useEffect, useRef, useState, type FormEvent, type ReactNode } from "react";
 import { Link, Navigate, useNavigate, useParams, useSearchParams } from "react-router";
-import { CheckCircle2, FileText } from "lucide-react";
+import {
+  ArrowDownWideNarrow,
+  ArrowRight,
+  ArrowUpNarrowWide,
+  CheckCircle2,
+  FileText,
+} from "lucide-react";
+import { FormSelect } from "@/components/ui/form-select";
+import {
+  isSortKey,
+  sortApplications,
+  sortDirLabels,
+  sortOptions,
+  type SortDir,
+  type SortKey,
+} from "./application-sort";
 import { ConfettiBurst, type ConfettiOrigin } from "@/components/confetti-burst";
 import { BackLink } from "@/components/back-link";
 import { Button, buttonVariants } from "@/components/ui/button";
@@ -10,10 +25,19 @@ import { Checkbox } from "@/components/ui/checkbox";
 import { JobCard } from "@/features/jobs/job-card";
 import { ApplicationOfferPreview } from "@/features/jobs/application-offer-preview";
 import { usePrototype } from "./store";
-import { currentPerson, publishedJobs, stageLabels, MIN_APPLICATION_ANSWER_LENGTH } from "./model";
+import {
+  candidateStageLabels,
+  currentPerson,
+  publishedJobs,
+  MIN_APPLICATION_ANSWER_LENGTH,
+} from "./model";
 import { PageTitle, Empty, NotFound, Notice } from "./shell";
 import { CvAttachment } from "./cv-attachment";
 import { MatchScore } from "./match-score";
+import { OwnWorkLabel, WorkSummaryCard } from "./work-summary";
+import { SubmittedFreshness } from "./submitted-freshness";
+import { isCurrentApplication } from "./application-freshness";
+import { StageProgressBar } from "./stage-progress-bar";
 import { RecruitingApplication } from "./recruiting-application";
 import { CandidateApplication } from "./candidate-application";
 
@@ -31,10 +55,11 @@ export function PersonPicker() {
   const [params] = useSearchParams();
   const next = params.get("next");
   const audience = params.get("audience");
-  const people =
-    audience === "candidate" || audience === "employer"
-      ? state.people.filter((person) => person.role === audience)
-      : state.people;
+  const people = state.people.filter(
+    (person) =>
+      person.listed !== false &&
+      (audience === "candidate" || audience === "employer" ? person.role === audience : true),
+  );
   const safeNext = next && /^\/(?!\/)/.test(next) && !next.startsWith("/auth") ? next : null;
   return (
     <section className="prototype-section max-w-4xl">
@@ -410,18 +435,45 @@ export function ApplyPage() {
     </section>
   );
 }
+const OWN_WORK_PARAM = "wlasna-praca";
+const CURRENT_PARAM = "aktualne";
+const SORT_PARAM = "sort";
+const DIR_PARAM = "kierunek";
 export function ApplicationsPage({ employer = false }: { employer?: boolean }) {
   const { state } = usePrototype();
   const person = currentPerson(state)!;
   const [query, setQuery] = useState("");
-  const [params] = useSearchParams();
-  const applications = state.applications.filter(
+  const [params, setParams] = useSearchParams();
+  const ownWorkOnly = employer && params.get(OWN_WORK_PARAM) === "1";
+  const matching = state.applications.filter(
     (x) =>
       (employer ? x.companyId === person.companyId : x.candidateId === person.id) &&
       `${x.candidateName} ${x.jobTitle}`
         .toLocaleLowerCase("pl")
         .includes(query.toLocaleLowerCase("pl")),
   );
+  // Employer default: only current applications; `?aktualne=0` shows ended ones too.
+  const currentOnly = employer && params.get(CURRENT_PARAM) !== "0";
+  const currentCount = matching.filter((x) => isCurrentApplication(x.stage)).length;
+  const scoped = currentOnly ? matching.filter((x) => isCurrentApplication(x.stage)) : matching;
+  const ownWorkCount = scoped.filter((x) => x.work?.ownWork).length;
+  const rawSort = params.get(SORT_PARAM);
+  const sortKey: SortKey = isSortKey(rawSort) ? rawSort : "score";
+  const sortDir: SortDir = params.get(DIR_PARAM) === "asc" ? "asc" : "desc";
+  const filtered = ownWorkOnly ? scoped.filter((x) => x.work?.ownWork) : scoped;
+  const applications = employer ? sortApplications(filtered, sortKey, sortDir) : filtered;
+  const setParam = (key: string, value: string | null) =>
+    setParams(
+      (current) => {
+        const next = new URLSearchParams(current);
+        if (value === null) next.delete(key);
+        else next.set(key, value);
+        return next;
+      },
+      { replace: true },
+    );
+  const sortLabel = sortOptions.find((x) => x.value === sortKey)!.label;
+  const dirLabel = sortDir === "desc" ? sortDirLabels[sortKey].desc : sortDirLabels[sortKey].asc;
   return (
     <>
       <PageTitle>{employer ? "Kandydaci" : "Moje aplikacje"}</PageTitle>
@@ -433,28 +485,137 @@ export function ApplicationsPage({ employer = false }: { employer?: boolean }) {
       <Field label={employer ? "Szukaj kandydata lub oferty" : "Szukaj oferty"}>
         <Input value={query} onChange={(e) => setQuery(e.target.value)} />
       </Field>
+      {employer && (
+        <div className="candidate-toolbar">
+          <div className="candidate-filters">
+            <label className="own-work-filter">
+              <Checkbox
+                aria-label="Pokaż tylko aktualne zgłoszenia"
+                checked={currentOnly}
+                onCheckedChange={(checked) => setParam(CURRENT_PARAM, checked ? null : "0")}
+              />
+              <span>
+                Pokaż tylko aktualne zgłoszenia{" "}
+                <span className="own-work-filter-count">({currentCount})</span>
+              </span>
+            </label>
+            <label className="own-work-filter">
+              <Checkbox
+                aria-label="Pokaż tylko kandydatów z opisem własnej pracy"
+                checked={ownWorkOnly}
+                onCheckedChange={(checked) => setParam(OWN_WORK_PARAM, checked ? "1" : null)}
+              />
+              <span>
+                Pokaż tylko kandydatów z opisem własnej pracy{" "}
+                <span className="own-work-filter-count">({ownWorkCount})</span>
+              </span>
+            </label>
+          </div>
+          <div className="candidate-sort" role="group" aria-label="Sortowanie kandydatów">
+            <span className="candidate-sort-label" aria-hidden="true">
+              Sortuj
+            </span>
+            <FormSelect
+              ariaLabel="Sortuj według"
+              value={sortKey}
+              options={sortOptions}
+              className="candidate-sort-select"
+              onValueChange={(value) => setParam(SORT_PARAM, value === "score" ? null : value)}
+            />
+            <Button
+              type="button"
+              variant="outline"
+              className="candidate-sort-dir"
+              aria-label={`Kierunek sortowania: ${dirLabel}. Kliknij, aby odwrócić.`}
+              onClick={() => setParam(DIR_PARAM, sortDir === "desc" ? "asc" : null)}
+            >
+              {sortDir === "desc" ? (
+                <ArrowDownWideNarrow aria-hidden="true" />
+              ) : (
+                <ArrowUpNarrowWide aria-hidden="true" />
+              )}
+              {dirLabel}
+            </Button>
+          </div>
+        </div>
+      )}
+      <p role="status" className="sr-only">
+        {employer
+          ? `Wyświetlane zgłoszenia: ${applications.length}. Sortowanie: ${sortLabel}, ${dirLabel}.`
+          : ""}
+      </p>
       <div className="mt-6 space-y-4">
         {applications.length ? (
           applications.map((a) => (
-            <article className="prototype-panel" key={a.id}>
-              <div className="flex flex-wrap items-start justify-between gap-4">
-                <div>
-                  <Link
-                    className="text-xl font-semibold text-[var(--gui-link)]"
-                    to={`${employer ? "/app/kandydaci" : "/app/aplikacje"}/${a.id}`}
-                  >
-                    {employer ? a.candidateName : a.jobTitle}
-                  </Link>
-                  <p className="my-3 text-muted-foreground">
-                    {employer
-                      ? a.jobTitle
-                      : state.companies.find((x) => x.id === a.companyId)?.name}
-                  </p>
-                  <p>{stageLabels[a.stage]}</p>
+            <article
+              className={employer ? "prototype-panel application-card" : "prototype-panel"}
+              key={a.id}
+            >
+              {employer ? (
+                <div className="application-card-top">
+                  <div className="application-card-main">
+                    {a.events[0] && (
+                      <SubmittedFreshness stage={a.stage} submittedAt={a.events[0].at} />
+                    )}
+                    <Link
+                      className="text-xl font-semibold text-[var(--gui-link)]"
+                      to={`/app/kandydaci/${a.id}`}
+                    >
+                      {a.candidateName}
+                    </Link>
+                    <p className="my-3 text-muted-foreground">{a.jobTitle}</p>
+                    <StageProgressBar stage={a.stage} history={a.events} />
+                  </div>
+                  <div className="score-panel">
+                    <MatchScore score={a.score} variant="ring" />
+                  </div>
+                  {a.work?.ownWork && (
+                    <div className="application-card-label">
+                      <OwnWorkLabel />
+                    </div>
+                  )}
                 </div>
-                <MatchScore score={a.score} />
-              </div>
-              {employer && <p className="mt-4 text-muted-foreground">{a.summary}</p>}
+              ) : (
+                <div className="flex flex-wrap items-start justify-between gap-4">
+                  <div>
+                    <Link
+                      className="text-xl font-semibold text-[var(--gui-link)]"
+                      to={`${employer ? "/app/kandydaci" : "/app/aplikacje"}/${a.id}`}
+                    >
+                      {employer ? a.candidateName : a.jobTitle}
+                    </Link>
+                    <p className="my-3 text-muted-foreground">
+                      {employer
+                        ? a.jobTitle
+                        : state.companies.find((x) => x.id === a.companyId)?.name}
+                    </p>
+                    {employer ? (
+                      <StageProgressBar stage={a.stage} history={a.events} />
+                    ) : (
+                      <p>{candidateStageLabels[a.stage]}</p>
+                    )}
+                  </div>
+                  <MatchScore score={a.score} variant="ring" />
+                </div>
+              )}
+              {employer &&
+                (a.work ? (
+                  <WorkSummaryCard work={a.work} />
+                ) : (
+                  <p className="mt-4 text-muted-foreground">{a.summary}</p>
+                ))}
+              {employer && (
+                <div className="application-card-actions">
+                  <Link
+                    className={buttonVariants({ size: "sm" })}
+                    to={`/app/kandydaci/${a.id}`}
+                    aria-label={`Zobacz szczegóły: ${a.candidateName}`}
+                  >
+                    Zobacz szczegóły
+                    <ArrowRight aria-hidden="true" />
+                  </Link>
+                </div>
+              )}
             </article>
           ))
         ) : (
