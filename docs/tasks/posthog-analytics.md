@@ -22,7 +22,7 @@ Connect PostHog to the published prototype and confirm that a pageview and an Au
 
 ## Status
 
-In progress. See Verification for what has actually run.
+Deployed on 2026-11-13: commit 50e1a23 pushed to `main`, Vercel production deployment Ready at https://doroboty-ai-blond.vercel.app. Waiting for the participant to confirm the Pageview and Autocapture events in PostHog Activity → Live.
 
 ## Verification
 
@@ -31,3 +31,10 @@ Local, before deploy (2026-11-13):
 - Passed: Prettier check with `--end-of-line auto`, lint, typecheck, unit tests (8 files, 40 tests), production build.
 - Failed for reasons outside this change, also failing on the unchanged checkout: plain Prettier check (CRLF line endings from `core.autocrlf=true`), `design-system:check` (agent-kit file hashes differ because of CRLF), `verify:packet` (same).
 - Not run: browser journeys. Playwright Chromium is not installed on this machine (`chromium_headless_shell-1243` missing); all 34 tests failed at browser launch.
+
+Production, after deploy (2026-11-13, built-in browser):
+
+- The served bundle contains the project token and the EU host; PostHog loaded its config, recorder, dead-clicks and web-vitals scripts from eu-assets.i.posthog.com.
+- After clicking "Zobacz oferty", the page sent event batches to `https://eu.i.posthog.com/i/v0/e/` and recording data to `https://eu.i.posthog.com/s/`. No console errors.
+- `/#/app/settings` renders inside the `ph-no-capture` wrapper with computed `display: contents`.
+- Not checked here: the events as shown inside PostHog (needs the participant's PostHog login).
