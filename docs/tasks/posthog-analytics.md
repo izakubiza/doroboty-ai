@@ -30,7 +30,8 @@ Local, before deploy (2026-11-13):
 
 - Passed: Prettier check with `--end-of-line auto`, lint, typecheck, unit tests (8 files, 40 tests), production build.
 - Failed for reasons outside this change, also failing on the unchanged checkout: plain Prettier check (CRLF line endings from `core.autocrlf=true`), `design-system:check` (agent-kit file hashes differ because of CRLF), `verify:packet` (same).
-- Not run: browser journeys. Playwright Chromium is not installed on this machine (`chromium_headless_shell-1243` missing); all 34 tests failed at browser launch.
+- First attempt at browser journeys could not start: Playwright Chromium was not installed (`chromium_headless_shell-1243` missing).
+- After the participant approved `npx playwright install chromium`: 33 of 34 browser journeys passed in the full parallel run. The failing one, "published job → saved offer/draft → submitted application → employer decision survives reload", hit the 30 s test timeout (33.8 s) with no assertion failure; run alone it passed in 10.7 s. The "no external requests" journeys pass because local builds have no PostHog token.
 
 Production, after deploy (2026-11-13, built-in browser):
 
