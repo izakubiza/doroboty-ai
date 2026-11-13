@@ -1,3 +1,4 @@
+import type { ReactNode } from "react";
 import { HashRouter, Routes, Route, Navigate } from "react-router";
 import { PrototypeProvider } from "./store";
 import { Shell, NotFound } from "./shell";
@@ -17,6 +18,12 @@ import {
 import { EmployerJobs, EmployerJobEditor, CompanyEditor } from "./employer";
 import { SettingsPage, PrivacyPage } from "./settings";
 import { CasePage } from "./case";
+import { NO_CAPTURE } from "@/lib/analytics";
+
+// Screens that show or collect personal data: skipped by Autocapture and hidden in session recordings.
+function Private({ children }: { children: ReactNode }) {
+  return <div className={`${NO_CAPTURE} contents`}>{children}</div>;
+}
 function AppRoutes() {
   return (
     <Routes>
@@ -32,7 +39,9 @@ function AppRoutes() {
           path="aplikuj/:slug"
           element={
             <RequireRole role="candidate">
-              <ApplyPage />
+              <Private>
+                <ApplyPage />
+              </Private>
             </RequireRole>
           }
         />
@@ -49,7 +58,9 @@ function AppRoutes() {
           path="app/profil"
           element={
             <RequireRole role="candidate">
-              <ProfilePage />
+              <Private>
+                <ProfilePage />
+              </Private>
             </RequireRole>
           }
         />
@@ -57,7 +68,9 @@ function AppRoutes() {
           path="app/profil/podglad"
           element={
             <RequireRole role="candidate">
-              <ProfilePage preview />
+              <Private>
+                <ProfilePage preview />
+              </Private>
             </RequireRole>
           }
         />
@@ -73,7 +86,9 @@ function AppRoutes() {
           path="app/aplikacje"
           element={
             <RequireRole role="candidate">
-              <ApplicationsPage />
+              <Private>
+                <ApplicationsPage />
+              </Private>
             </RequireRole>
           }
         />
@@ -81,7 +96,9 @@ function AppRoutes() {
           path="app/aplikacje/:id"
           element={
             <RequireRole role="candidate">
-              <ApplicationDetail />
+              <Private>
+                <ApplicationDetail />
+              </Private>
             </RequireRole>
           }
         />
@@ -89,7 +106,9 @@ function AppRoutes() {
           path="app/aplikacje/:id/wyslano"
           element={
             <RequireRole role="candidate">
-              <ApplicationDetail />
+              <Private>
+                <ApplicationDetail />
+              </Private>
             </RequireRole>
           }
         />
@@ -121,7 +140,9 @@ function AppRoutes() {
           path="app/kandydaci"
           element={
             <RequireRole role="employer">
-              <ApplicationsPage employer />
+              <Private>
+                <ApplicationsPage employer />
+              </Private>
             </RequireRole>
           }
         />
@@ -129,7 +150,9 @@ function AppRoutes() {
           path="app/kandydaci/:id"
           element={
             <RequireRole role="employer">
-              <ApplicationDetail employer />
+              <Private>
+                <ApplicationDetail employer />
+              </Private>
             </RequireRole>
           }
         />
@@ -141,7 +164,14 @@ function AppRoutes() {
             </RequireRole>
           }
         />
-        <Route path="app/settings" element={<SettingsPage />} />
+        <Route
+          path="app/settings"
+          element={
+            <Private>
+              <SettingsPage />
+            </Private>
+          }
+        />
         <Route path="*" element={<NotFound />} />
       </Route>
     </Routes>
